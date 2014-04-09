@@ -34,6 +34,14 @@ class DbfParserSync
 		
 		return json
 
+	get_header: ->
+		return @header
+
+	get_records: ->
+		return @records
+
+
+
 parseRecord = (sequenceNumber, buffer, header) ->
 	record = {
 		'@sequenceNumber': sequenceNumber
@@ -57,14 +65,13 @@ parseField = (field, buffer) ->
 
 		value = if value in ['', '-99999999.99', '-99999999.990'] then '' else value
 
-
-	#else if field.type in ['Date', 'Boolean']
-		# leave as string here
-		# 
-		# But, in sip_record_table method convert_to_type
-		# convert date strings to ISO format 
-		# and boolean strings to Boolean
 		value = value.toString()
+
+		# leave Date and Boolean field types as string
+
+	# to store as Date or Boolean  add:
+	# else if field.type in ['Date', 'Boolean']
+	#			do conversion here
 
 
 	else
@@ -129,4 +136,31 @@ getFieldType = (dbf_type_code) ->
 			ft = "String"
 	return ft
 
-module.exports.DbfParserSync = DbfParserSync
+
+makeJson = (path_from, path_to, debug=false) ->
+	if debug
+	  console.log("----------------------------")
+	  console.log("Parsing dbf file in: #{path_from}")
+	  console.log "Saving in json file: #{path_to}"
+
+  try
+    p = new DbfParserSync(path_from)
+  catch e 
+    console.log("Error parsing: #{path_from}") if debug
+    throw e
+
+
+  try
+    fs.writeFileSync path_to, JSON.stringify(p.get_json(), undefined, 2)
+  catch e
+    console.log("Error writing: #{path_to}") if debug
+    throw e
+
+  console.log("Finished write to %s", path_to) if debug
+
+  return null
+
+module.exports = {
+	DbfParserSync
+	makeJson
+}
