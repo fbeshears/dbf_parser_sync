@@ -6,9 +6,9 @@ path = require 'path'
 
 class DbfParserSync
 
-	constructor: (@file_name) ->
+	constructor: (@dbf_file_name) ->
 
-		buffer = fs.readFileSync @file_name
+		buffer = fs.readFileSync @dbf_file_name
 
 		@header = new Header buffer, @get_name()
 
@@ -24,13 +24,15 @@ class DbfParserSync
 		return null
 
 	get_name:  ->
-		fn = @file_name.toLowerCase()				# e.g. "./datadict/filemast.dbf"
+		fn = @dbf_file_name.toLowerCase()				# e.g. "./datadict/filemast.dbf"
 		return  path.basename(fn,".dbf")		# e.g. "filemast"
 
 	get_json: ->
-		json = 
+		obj = 
 			header: @header
 			records: @records
+
+		json = JSON.stringify obj, undefined, 2
 		
 		return json
 
@@ -39,6 +41,16 @@ class DbfParserSync
 
 	get_records: ->
 		return @records
+
+	write_json: (json_file_name) ->
+	  try
+	    fs.writeFileSync json_file_name, @get_json()
+	  catch e
+	    console.log("Error writing: #{json_file_name}")
+	    throw e
+
+
+
 
 
 
@@ -137,26 +149,26 @@ getFieldType = (dbf_type_code) ->
 	return ft
 
 
-makeJson = (path_from, path_to, debug=false) ->
+makeJson = (dbf_file_name, json_file_name, debug=false) ->
 	if debug
 	  console.log("----------------------------")
-	  console.log("Parsing dbf file in: #{path_from}")
-	  console.log "Saving in json file: #{path_to}"
+	  console.log("Parsing dbf file in: #{dbf_file_name}")
+	  console.log "Saving in json file: #{json_file_name}"
 
   try
-    p = new DbfParserSync(path_from)
+    p = new DbfParserSync(dbf_file_name)
   catch e 
-    console.log("Error parsing: #{path_from}") if debug
+    console.log("Error parsing: #{dbf_file_name}")
     throw e
 
 
   try
-    fs.writeFileSync path_to, JSON.stringify(p.get_json(), undefined, 2)
+    fs.writeFileSync json_file_name, p.get_json()
   catch e
-    console.log("Error writing: #{path_to}") if debug
+    console.log("Error writing: #{json_file_name}")
     throw e
 
-  console.log("Finished write to %s", path_to) if debug
+  console.log("Finished write to %s", json_file_name) if debug
 
   return null
 
