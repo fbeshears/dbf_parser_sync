@@ -1,8 +1,9 @@
 Readme Notes:
 
-You need to have node.js, npm, and coffee-script installed.
+You need to have node.js installed.
 
-You should have npm, coffee-script installed globally.
+To use the coffee-script version in the src directory,
+you should also have CoffeeScript installed.
 
 
 
