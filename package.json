@@ -1,0 +1,28 @@
+{
+  "name": "dbf_parser_sync",
+  "version": "0.0.1",
+  "description": "A sync dbf file parser that produces json output.",
+  "main": "./lib/dbf_parser_sync.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node ./test/test_parser.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fbeshears/dbf_parser_sync.git"
+  },
+  "keywords": [
+    "dbf",
+    "parser",
+    "sync",
+    "json"
+  ],
+  "author": "Fred M Beshears",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fbeshears/dbf_parser_sync/issues"
+  },
+  "homepage": "https://github.com/fbeshears/dbf_parser_sync"
+}

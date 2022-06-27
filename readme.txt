@@ -79,7 +79,7 @@ for the dbf file's records. Use the following:
 
 p = new dps.DbfParserSync(dbf_file_name)
 
-header = p.get_header()           # will return an object that defines each records fields
+header = p.get_header()           # will return an object that defines each record's fields
 
 records = p.get_records()         # will return an array of objects, one for each record
 
